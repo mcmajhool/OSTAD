@@ -1,0 +1,6 @@
+{
+  "name": "Ostadi – أستاذي",
+  "description": "تطبيق متكامل للأساتذة في الجزائر لإدارة الأقسام والطلبة والغيابات والنقاط - Professional management app for teachers in Algeria.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

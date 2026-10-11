@@ -1,0 +1,86 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isTeacher(teacherUid) {
+      return isAuthenticated() && request.auth.uid == teacherUid;
+    }
+
+    function isValidTeacherProfile(data) {
+      return data.firstName is string && data.firstName.size() > 0 && data.firstName.size() <= 100 &&
+             data.lastName is string && data.lastName.size() > 0 && data.lastName.size() <= 100 &&
+             data.email is string && data.email.size() > 0 &&
+             data.educationalLevel is string && data.educationalLevel.size() > 0 &&
+             (!('schoolName' in data) || data.schoolName is string) &&
+             (!('wilaya' in data) || data.wilaya is string) &&
+             (!('subject' in data) || data.subject is string) &&
+             (!('accountCreationDate' in data) || data.accountCreationDate is timestamp || data.accountCreationDate is string);
+    }
+
+    function isValidClassroom(data) {
+      return data.name is string && data.name.size() > 0 && data.name.size() <= 100 &&
+             data.level is string && data.level.size() > 0 &&
+             (!('roomNumber' in data) || data.roomNumber is string) &&
+             (!('studentCount' in data) || data.studentCount is int) &&
+             (!('averageScore' in data) || data.averageScore is number);
+    }
+
+    function isValidStudent(data) {
+      return data.classroomId is string && data.classroomId.size() > 0 &&
+             data.firstName is string && data.firstName.size() > 0 &&
+             data.lastName is string && data.lastName.size() > 0 &&
+             data.gender is string && (data.gender == 'MALE' || data.gender == 'FEMALE') &&
+             data.registrationNumber is string && data.registrationNumber.size() > 0 &&
+             (!('parentPhone' in data) || data.parentPhone is string) &&
+             (!('termAverage' in data) || data.termAverage == null || data.termAverage is number) &&
+             (!('totalAbsences' in data) || data.totalAbsences is int) &&
+             (!('participationStars' in data) || data.participationStars is int) &&
+             (!('notes' in data) || data.notes is string);
+    }
+
+    // Teacher profile and private data subcollections
+    // Multi-tenant isolation: Each teacher can strictly read and write ONLY their own documents
+    match /teachers/{teacherUid} {
+      allow read, delete: if isTeacher(teacherUid);
+      allow create, update: if isTeacher(teacherUid) && isValidTeacherProfile(request.resource.data);
+
+      match /classrooms/{classroomId} {
+        allow read, delete: if isTeacher(teacherUid);
+        allow create, update: if isTeacher(teacherUid) && isValidClassroom(request.resource.data);
+      }
+
+      match /students/{studentId} {
+        allow read, delete: if isTeacher(teacherUid);
+        allow create, update: if isTeacher(teacherUid) && isValidStudent(request.resource.data);
+      }
+
+      match /attendance/{attendanceId} {
+        allow read, delete: if isTeacher(teacherUid);
+        allow create, update: if isTeacher(teacherUid);
+      }
+
+      match /grades/{gradeId} {
+        allow read, delete: if isTeacher(teacherUid);
+        allow create, update: if isTeacher(teacherUid);
+      }
+
+      match /participation/{participationId} {
+        allow read, delete: if isTeacher(teacherUid);
+        allow create, update: if isTeacher(teacherUid);
+      }
+
+      match /exams/{examId} {
+        allow read, delete: if isTeacher(teacherUid);
+        allow create, update: if isTeacher(teacherUid);
+      }
+
+      match /{allSubcollections=**} {
+        allow read, write: if isTeacher(teacherUid);
+      }
+    }
+  }
+}
