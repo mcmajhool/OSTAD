@@ -25,6 +25,7 @@ import androidx.compose.material.icons.filled.CloudDone
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.LockReset
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.School
 import androidx.compose.material.icons.filled.Security
 import androidx.compose.material3.AlertDialog
@@ -73,6 +74,7 @@ fun LoginScreen(
     onLoadingChange: (Boolean) -> Unit,
     onErrorChange: (String?) -> Unit,
     onAuthSuccess: () -> Unit,
+    onDemoLogin: () -> Unit,
     onNavigate: (OstadiScreen) -> Unit
 ) {
     val s = AppStrings.get(language)
@@ -212,6 +214,38 @@ fun LoginScreen(
                         fontWeight = FontWeight.Bold
                     )
                 }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        // Direct Demo Mode Preview Button
+        OutlinedButton(
+            onClick = onDemoLogin,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(52.dp)
+                .testTag("login_demo_mode_button"),
+            shape = RoundedCornerShape(14.dp),
+            colors = ButtonDefaults.outlinedButtonColors(
+                contentColor = NavyPrimary
+            )
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.PlayArrow,
+                    contentDescription = null,
+                    tint = GoldAccent,
+                    modifier = Modifier.size(20.dp)
+                )
+                Text(
+                    text = if (isAr) "معاينة تجريبية للنظام (استعراض دون تسجيل)" else "Mode Démo (Aperçu sans connexion)",
+                    style = MaterialTheme.typography.titleSmall,
+                    fontWeight = FontWeight.Bold
+                )
             }
         }
 

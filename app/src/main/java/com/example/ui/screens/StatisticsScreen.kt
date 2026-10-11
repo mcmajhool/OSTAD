@@ -18,12 +18,12 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.TrendingUp
 import androidx.compose.material.icons.filled.EmojiEvents
 import androidx.compose.material.icons.filled.Female
 import androidx.compose.material.icons.filled.Male
 import androidx.compose.material.icons.filled.PieChart
 import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.icons.filled.TrendingUp
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -122,7 +122,7 @@ fun StatisticsScreen(
                                 .background(GoldAccent.copy(alpha = 0.25f)),
                             contentAlignment = Alignment.Center
                         ) {
-                            Icon(Icons.Default.TrendingUp, contentDescription = null, tint = GoldAccent)
+                            Icon(Icons.AutoMirrored.Filled.TrendingUp, contentDescription = null, tint = GoldAccent)
                         }
                     }
 

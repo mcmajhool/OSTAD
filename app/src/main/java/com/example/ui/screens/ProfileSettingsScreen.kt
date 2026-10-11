@@ -18,14 +18,14 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ExitToApp
+import androidx.compose.material.icons.automirrored.filled.MenuBook
 import androidx.compose.material.icons.filled.Business
 import androidx.compose.material.icons.filled.CloudDone
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.LocationOn
-import androidx.compose.material.icons.filled.MenuBook
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.School
 import androidx.compose.material3.Button
@@ -157,7 +157,7 @@ fun ProfileSettingsScreen(
 
                     ProfileInfoRow(icon = Icons.Default.Business, label = s.schoolNameLabel, value = profile?.schoolName ?: "")
                     ProfileInfoRow(icon = Icons.Default.LocationOn, label = s.wilayaLabel, value = profile?.wilaya ?: "")
-                    ProfileInfoRow(icon = Icons.Default.MenuBook, label = s.subjectLabel, value = profile?.subject ?: "")
+                    ProfileInfoRow(icon = Icons.AutoMirrored.Filled.MenuBook, label = s.subjectLabel, value = profile?.subject ?: "")
                     ProfileInfoRow(icon = Icons.Default.DateRange, label = s.academicYearLabel, value = profile?.academicYear ?: "2024 / 2025")
                 }
             }
@@ -322,7 +322,7 @@ fun ProfileSettingsScreen(
                     .testTag("logout_button"),
                 shape = RoundedCornerShape(12.dp)
             ) {
-                Icon(Icons.Default.ExitToApp, contentDescription = null, tint = CrimsonAbsence)
+                Icon(Icons.AutoMirrored.Filled.ExitToApp, contentDescription = null, tint = CrimsonAbsence)
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
                     text = s.logout,

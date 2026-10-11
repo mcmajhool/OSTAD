@@ -16,10 +16,10 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.MenuBook
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Business
 import androidx.compose.material.icons.filled.LocationOn
-import androidx.compose.material.icons.filled.MenuBook
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.School
 import androidx.compose.material3.Button
@@ -182,7 +182,7 @@ fun RegisterScreen(
             value = subject,
             onValueChange = { subject = it },
             label = { Text(s.subjectLabel) },
-            leadingIcon = { Icon(Icons.Default.MenuBook, contentDescription = null, tint = NavyPrimary) },
+            leadingIcon = { Icon(Icons.AutoMirrored.Filled.MenuBook, contentDescription = null, tint = NavyPrimary) },
             modifier = Modifier.fillMaxWidth().testTag("register_subject_input"),
             shape = RoundedCornerShape(12.dp),
             singleLine = true

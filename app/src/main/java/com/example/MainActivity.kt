@@ -149,6 +149,7 @@ fun OstadiAppContent(
                     onLoadingChange = { viewModel.setAuthLoading(it) },
                     onErrorChange = { viewModel.setAuthError(it) },
                     onAuthSuccess = { viewModel.onAuthSuccess() },
+                    onDemoLogin = { viewModel.enterDemoMode() },
                     onNavigate = { viewModel.navigateTo(it) }
                 )
             } else {
@@ -169,6 +170,7 @@ fun OstadiAppContent(
                             onLoadingChange = { viewModel.setAuthLoading(it) },
                             onErrorChange = { viewModel.setAuthError(it) },
                             onAuthSuccess = { viewModel.onAuthSuccess() },
+                            onDemoLogin = { viewModel.enterDemoMode() },
                             onNavigate = { viewModel.navigateTo(it) }
                         )
                     }

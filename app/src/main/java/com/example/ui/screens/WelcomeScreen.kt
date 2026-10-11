@@ -101,12 +101,20 @@ fun WelcomeScreen(
                         modifier = Modifier.size(20.dp)
                     )
                 }
-                Text(
-                    text = s.appName,
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Bold,
-                    color = NavyPrimary
-                )
+                Column {
+                    Text(
+                        text = s.appName,
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold,
+                        color = NavyPrimary
+                    )
+                    Text(
+                        text = if (isAr) "الإصدار 1.1 (مُحدّث)" else "Version 1.1 (Mise à jour)",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = GoldAccent,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
             }
 
             Surface(

@@ -20,11 +20,12 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.EventNote
+import androidx.compose.material.icons.automirrored.filled.TrendingUp
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.AssignmentLate
 import androidx.compose.material.icons.filled.AssignmentTurnedIn
 import androidx.compose.material.icons.filled.Class
-import androidx.compose.material.icons.filled.EventNote
 import androidx.compose.material.icons.filled.Female
 import androidx.compose.material.icons.filled.Grade
 import androidx.compose.material.icons.filled.Leaderboard
@@ -32,7 +33,6 @@ import androidx.compose.material.icons.filled.Male
 import androidx.compose.material.icons.filled.People
 import androidx.compose.material.icons.filled.PersonAdd
 import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.icons.filled.TrendingUp
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -362,7 +362,7 @@ fun DashboardScreen(
                     title = if (isAr) "نسبة النجاح" else "Taux de réussite",
                     value = "${uiState.successRatePercentage}%",
                     subtitle = if (isAr) "معدل ≥ 10/20" else "Moyenne ≥ 10",
-                    icon = Icons.Default.TrendingUp,
+                    icon = Icons.AutoMirrored.Filled.TrendingUp,
                     iconTint = GoldAccent,
                     iconBackgroundColor = GoldContainer,
                     modifier = Modifier
@@ -473,7 +473,7 @@ fun DashboardScreen(
                 )
                 ModuleShortcutCard(
                     title = s.navProfile,
-                    icon = Icons.Default.EventNote,
+                    icon = Icons.AutoMirrored.Filled.EventNote,
                     color = NavyLight,
                     modifier = Modifier.weight(1f),
                     onClick = { onNavigate(OstadiScreen.PROFILE_SETTINGS) }
@@ -612,7 +612,7 @@ private fun ExamEventCard(exam: ExamEvent) {
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
-                    imageVector = Icons.Default.EventNote,
+                    imageVector = Icons.AutoMirrored.Filled.EventNote,
                     contentDescription = null,
                     tint = NavyPrimary,
                     modifier = Modifier.size(24.dp)
