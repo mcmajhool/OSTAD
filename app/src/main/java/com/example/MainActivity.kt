@@ -223,7 +223,7 @@ fun OstadiAppContent(
                                 viewModel.recordAttendanceForStudent(studentId, status, note)
                             },
                             onSaveFullRollCall = {
-                                viewModel.clearNotification()
+                                viewModel.saveFullRollCall()
                             }
                         )
                     }

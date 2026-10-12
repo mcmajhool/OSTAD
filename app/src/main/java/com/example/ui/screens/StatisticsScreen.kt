@@ -92,7 +92,8 @@ fun StatisticsScreen(
                     .fillMaxWidth()
                     .testTag("stats_summary_card"),
                 shape = RoundedCornerShape(18.dp),
-                colors = CardDefaults.cardColors(containerColor = NavyPrimary)
+                colors = CardDefaults.cardColors(containerColor = Color(0xFF0E1A2E)),
+                border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFF1E314D))
             ) {
                 Column(modifier = Modifier.padding(18.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
                     Row(

@@ -309,6 +309,13 @@ class OstadiViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
+    fun saveFullRollCall() {
+        val s = com.example.localization.AppStrings.get(_uiState.value.currentLanguage)
+        _uiState.update {
+            it.copy(statusNotification = if (it.currentLanguage == com.example.localization.AppLanguage.ARABIC) "تم حفظ ورقة المناداة الكاملة للحصة بنجاح" else "Feuille d'appel enregistrée avec succès")
+        }
+    }
+
     fun saveGrade(
         studentId: String,
         continuous: Double?,

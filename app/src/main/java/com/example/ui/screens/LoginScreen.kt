@@ -62,6 +62,7 @@ import com.example.ui.navigation.OstadiScreen
 import com.example.ui.theme.CrimsonAbsence
 import com.example.ui.theme.CrimsonContainer
 import com.example.ui.theme.GoldAccent
+import com.example.ui.theme.GoldLight
 import com.example.ui.theme.NavyContainer
 import com.example.ui.theme.NavyLight
 import com.example.ui.theme.NavyPrimary
@@ -100,7 +101,7 @@ fun LoginScreen(
             modifier = Modifier
                 .size(76.dp)
                 .clip(CircleShape)
-                .background(NavyPrimary),
+                .background(Color(0xFF13223C)),
             contentAlignment = Alignment.Center
         ) {
             Icon(
@@ -117,7 +118,7 @@ fun LoginScreen(
             text = s.loginTitle,
             style = MaterialTheme.typography.headlineMedium,
             fontWeight = FontWeight.Bold,
-            color = NavyPrimary
+            color = Color.White
         )
 
         Text(
@@ -187,14 +188,14 @@ fun LoginScreen(
                 .testTag("google_sign_in_button"),
             shape = RoundedCornerShape(14.dp),
             colors = ButtonDefaults.buttonColors(
-                containerColor = NavyPrimary,
-                contentColor = Color.White
+                containerColor = GoldAccent,
+                contentColor = Color(0xFF1A1305)
             )
         ) {
             if (isLoading) {
                 CircularProgressIndicator(
                     modifier = Modifier.size(24.dp),
-                    color = Color.White,
+                    color = Color(0xFF1A1305),
                     strokeWidth = 2.dp
                 )
             } else {
@@ -205,7 +206,7 @@ fun LoginScreen(
                     Icon(
                         imageVector = Icons.Default.AccountCircle,
                         contentDescription = null,
-                        tint = GoldAccent,
+                        tint = Color(0xFF1A1305),
                         modifier = Modifier.size(22.dp)
                     )
                     Text(
@@ -228,7 +229,7 @@ fun LoginScreen(
                 .testTag("login_demo_mode_button"),
             shape = RoundedCornerShape(14.dp),
             colors = ButtonDefaults.outlinedButtonColors(
-                contentColor = NavyPrimary
+                contentColor = GoldLight
             )
         ) {
             Row(
@@ -263,13 +264,13 @@ fun LoginScreen(
                 Icon(
                     imageVector = Icons.Default.LockReset,
                     contentDescription = null,
-                    tint = NavyLight,
+                    tint = GoldAccent,
                     modifier = Modifier.size(18.dp)
                 )
                 Text(
                     text = if (isAr) "استرجاع الحساب / مساعدة الدخول" else "Récupération de compte",
                     style = MaterialTheme.typography.bodySmall,
-                    color = NavyLight,
+                    color = GoldAccent,
                     fontWeight = FontWeight.SemiBold
                 )
             }
@@ -294,14 +295,14 @@ fun LoginScreen(
                     Icon(
                         imageVector = Icons.Default.Security,
                         contentDescription = null,
-                        tint = NavyPrimary,
+                        tint = GoldAccent,
                         modifier = Modifier.size(20.dp)
                     )
                     Text(
                         text = if (isAr) "أمان وخصوصية حساب كل أستاذ" else "Sécurité & Isolation des données",
                         style = MaterialTheme.typography.labelMedium,
                         fontWeight = FontWeight.Bold,
-                        color = NavyPrimary
+                        color = GoldLight
                     )
                 }
                 Text(
@@ -328,7 +329,7 @@ fun LoginScreen(
                 text = s.noAccountPrompt,
                 style = MaterialTheme.typography.bodyMedium,
                 fontWeight = FontWeight.SemiBold,
-                color = NavyPrimary
+                color = GoldAccent
             )
         }
     }
@@ -373,7 +374,10 @@ fun LoginScreen(
             confirmButton = {
                 Button(
                     onClick = { showRecoveryDialog = false },
-                    colors = ButtonDefaults.buttonColors(containerColor = NavyPrimary),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = GoldAccent,
+                        contentColor = Color(0xFF1A1305)
+                    ),
                     shape = RoundedCornerShape(10.dp)
                 ) {
                     Text(s.close)

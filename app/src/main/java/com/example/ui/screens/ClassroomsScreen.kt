@@ -92,8 +92,8 @@ fun ClassroomsScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = { onOpenAddDialog(true) },
-                containerColor = NavyPrimary,
-                contentColor = Color.White,
+                containerColor = GoldAccent,
+                contentColor = Color(0xFF1A1305),
                 shape = RoundedCornerShape(16.dp),
                 modifier = Modifier.testTag("fab_add_classroom")
             ) {
@@ -121,8 +121,8 @@ fun ClassroomsScreen(
                         onClick = { selectedLevelFilter = lvlKey },
                         label = { Text(lvlLabel) },
                         colors = FilterChipDefaults.filterChipColors(
-                            selectedContainerColor = NavyPrimary,
-                            selectedLabelColor = Color.White
+                            selectedContainerColor = GoldAccent,
+                            selectedLabelColor = Color(0xFF1A1305)
                         ),
                         shape = RoundedCornerShape(12.dp)
                     )
@@ -138,8 +138,12 @@ fun ClassroomsScreen(
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 items(filteredList) { classroom ->
+                    val dynamicStudentCount = uiState.getClassroomStudentCount(classroom.id)
+                    val dynamicAvg = uiState.getClassroomAverage(classroom.id)
                     ClassroomCardItem(
                         classroom = classroom,
+                        studentCount = if (dynamicStudentCount > 0) dynamicStudentCount else classroom.studentCount,
+                        averageScore = if (dynamicAvg > 0.0) dynamicAvg else classroom.averageScore,
                         language = uiState.currentLanguage,
                         onViewStudents = {
                             onSelectClassroom(classroom.id)
@@ -168,6 +172,8 @@ fun ClassroomsScreen(
 @Composable
 private fun ClassroomCardItem(
     classroom: Classroom,
+    studentCount: Int,
+    averageScore: Double,
     language: AppLanguage,
     onViewStudents: () -> Unit,
     onViewGrades: () -> Unit
@@ -196,13 +202,13 @@ private fun ClassroomCardItem(
                         modifier = Modifier
                             .size(44.dp)
                             .clip(CircleShape)
-                            .background(NavyContainer),
+                            .background(Color(0xFF13223C)),
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
                             imageVector = Icons.Default.Class,
                             contentDescription = null,
-                            tint = NavyPrimary,
+                            tint = GoldAccent,
                             modifier = Modifier.size(24.dp)
                         )
                     }
@@ -222,15 +228,15 @@ private fun ClassroomCardItem(
                 }
 
                 Surface(
-                    color = if (classroom.averageScore >= 14.0) EmeraldContainer else GoldContainer,
+                    color = if (averageScore >= 14.0) EmeraldContainer else GoldContainer,
                     shape = RoundedCornerShape(10.dp)
                 ) {
                     Text(
-                        text = "${classroom.averageScore} / 20",
+                        text = if (averageScore > 0.0) "$averageScore / 20" else "-- / 20",
                         modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
                         style = MaterialTheme.typography.labelMedium,
                         fontWeight = FontWeight.Bold,
-                        color = if (classroom.averageScore >= 14.0) EmeraldSuccess else Color(0xFF7A4A00)
+                        color = if (averageScore >= 14.0) EmeraldSuccess else Color(0xFF7A4A00)
                     )
                 }
             }
@@ -249,7 +255,7 @@ private fun ClassroomCardItem(
                     ) {
                         Icon(Icons.Default.People, contentDescription = null, tint = MaterialTheme.colorScheme.outline, modifier = Modifier.size(16.dp))
                         Text(
-                            text = "${classroom.studentCount} ${if (isAr) "تلميذ" else "élèves"}",
+                            text = "$studentCount ${if (isAr) "تلميذ" else "élèves"}",
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -271,14 +277,14 @@ private fun ClassroomCardItem(
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     Surface(
                         onClick = onViewStudents,
-                        color = NavyContainer,
+                        color = Color(0xFF13223C),
                         shape = RoundedCornerShape(8.dp)
                     ) {
                         Text(
                             text = if (isAr) "التلاميذ" else "Élèves",
                             modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
                             style = MaterialTheme.typography.labelSmall,
-                            color = NavyPrimary,
+                            color = GoldAccent,
                             fontWeight = FontWeight.Bold
                         )
                     }
@@ -367,7 +373,10 @@ private fun AddClassroomDialog(
                         onConfirm(name, level, room)
                     }
                 },
-                colors = ButtonDefaults.buttonColors(containerColor = NavyPrimary),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = GoldAccent,
+                    contentColor = Color(0xFF1A1305)
+                ),
                 shape = RoundedCornerShape(10.dp),
                 modifier = Modifier.testTag("dialog_confirm_add_classroom")
             ) {

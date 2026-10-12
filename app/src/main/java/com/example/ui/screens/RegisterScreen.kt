@@ -110,7 +110,7 @@ fun RegisterScreen(
             modifier = Modifier
                 .size(64.dp)
                 .clip(CircleShape)
-                .background(NavyPrimary),
+                .background(Color(0xFF13223C)),
             contentAlignment = Alignment.Center
         ) {
             Icon(
@@ -127,7 +127,7 @@ fun RegisterScreen(
             text = s.registerTitle,
             style = MaterialTheme.typography.headlineMedium,
             fontWeight = FontWeight.Bold,
-            color = NavyPrimary
+            color = Color.White
         )
 
         Text(
@@ -143,7 +143,7 @@ fun RegisterScreen(
             value = firstName,
             onValueChange = { firstName = it },
             label = { Text(if (isAr) "الاسم" else "Prénom") },
-            leadingIcon = { Icon(Icons.Default.Person, contentDescription = null, tint = NavyPrimary) },
+            leadingIcon = { Icon(Icons.Default.Person, contentDescription = null, tint = GoldAccent) },
             modifier = Modifier.fillMaxWidth().testTag("register_firstname_input"),
             shape = RoundedCornerShape(12.dp),
             singleLine = true
@@ -156,7 +156,7 @@ fun RegisterScreen(
             value = lastName,
             onValueChange = { lastName = it },
             label = { Text(if (isAr) "اللقب" else "Nom") },
-            leadingIcon = { Icon(Icons.Default.Person, contentDescription = null, tint = NavyPrimary) },
+            leadingIcon = { Icon(Icons.Default.Person, contentDescription = null, tint = GoldAccent) },
             modifier = Modifier.fillMaxWidth().testTag("register_lastname_input"),
             shape = RoundedCornerShape(12.dp),
             singleLine = true
@@ -169,7 +169,7 @@ fun RegisterScreen(
             value = schoolName,
             onValueChange = { schoolName = it },
             label = { Text(s.schoolNameLabel) },
-            leadingIcon = { Icon(Icons.Default.Business, contentDescription = null, tint = NavyPrimary) },
+            leadingIcon = { Icon(Icons.Default.Business, contentDescription = null, tint = GoldAccent) },
             modifier = Modifier.fillMaxWidth().testTag("register_school_input"),
             shape = RoundedCornerShape(12.dp),
             singleLine = true
@@ -182,7 +182,7 @@ fun RegisterScreen(
             value = subject,
             onValueChange = { subject = it },
             label = { Text(s.subjectLabel) },
-            leadingIcon = { Icon(Icons.AutoMirrored.Filled.MenuBook, contentDescription = null, tint = NavyPrimary) },
+            leadingIcon = { Icon(Icons.AutoMirrored.Filled.MenuBook, contentDescription = null, tint = GoldAccent) },
             modifier = Modifier.fillMaxWidth().testTag("register_subject_input"),
             shape = RoundedCornerShape(12.dp),
             singleLine = true
@@ -201,7 +201,7 @@ fun RegisterScreen(
                 onValueChange = {},
                 readOnly = true,
                 label = { Text(s.wilayaLabel) },
-                leadingIcon = { Icon(Icons.Default.LocationOn, contentDescription = null, tint = NavyPrimary) },
+                leadingIcon = { Icon(Icons.Default.LocationOn, contentDescription = null, tint = GoldAccent) },
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = wilayaExpanded) },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -237,7 +237,7 @@ fun RegisterScreen(
                 onValueChange = {},
                 readOnly = true,
                 label = { Text(s.cycleLabel) },
-                leadingIcon = { Icon(Icons.Default.School, contentDescription = null, tint = NavyPrimary) },
+                leadingIcon = { Icon(Icons.Default.School, contentDescription = null, tint = GoldAccent) },
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = cycleExpanded) },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -290,12 +290,15 @@ fun RegisterScreen(
                 .height(54.dp)
                 .testTag("register_google_button"),
             shape = RoundedCornerShape(14.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = NavyPrimary)
+            colors = ButtonDefaults.buttonColors(
+                containerColor = GoldAccent,
+                contentColor = Color(0xFF1A1305)
+            )
         ) {
             if (isLoading) {
                 CircularProgressIndicator(
                     modifier = Modifier.size(24.dp),
-                    color = Color.White,
+                    color = Color(0xFF1A1305),
                     strokeWidth = 2.dp
                 )
             } else {
@@ -306,7 +309,7 @@ fun RegisterScreen(
                     Icon(
                         imageVector = Icons.Default.AccountCircle,
                         contentDescription = null,
-                        tint = GoldAccent,
+                        tint = Color(0xFF1A1305),
                         modifier = Modifier.size(22.dp)
                     )
                     Text(
@@ -328,7 +331,7 @@ fun RegisterScreen(
                 text = s.alreadyHaveAccountPrompt,
                 style = MaterialTheme.typography.bodyMedium,
                 fontWeight = FontWeight.SemiBold,
-                color = NavyPrimary
+                color = GoldAccent
             )
         }
     }

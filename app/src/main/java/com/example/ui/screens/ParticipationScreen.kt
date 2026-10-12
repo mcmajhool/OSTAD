@@ -85,8 +85,8 @@ fun ParticipationScreen(
                         onClick = { onSelectClassroom(null) },
                         label = { Text(s.allClassrooms) },
                         colors = FilterChipDefaults.filterChipColors(
-                            selectedContainerColor = NavyPrimary,
-                            selectedLabelColor = Color.White
+                            selectedContainerColor = GoldAccent,
+                            selectedLabelColor = Color(0xFF1A1305)
                         ),
                         shape = RoundedCornerShape(12.dp)
                     )
@@ -98,8 +98,8 @@ fun ParticipationScreen(
                         onClick = { onSelectClassroom(classroom.id) },
                         label = { Text(classroom.name) },
                         colors = FilterChipDefaults.filterChipColors(
-                            selectedContainerColor = NavyPrimary,
-                            selectedLabelColor = Color.White
+                            selectedContainerColor = GoldAccent,
+                            selectedLabelColor = Color(0xFF1A1305)
                         ),
                         shape = RoundedCornerShape(12.dp)
                     )
@@ -112,7 +112,8 @@ fun ParticipationScreen(
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(16.dp),
-                colors = CardDefaults.cardColors(containerColor = NavyPrimary)
+                colors = CardDefaults.cardColors(containerColor = Color(0xFF0E1A2E)),
+                border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFF1E314D))
             ) {
                 Row(
                     modifier = Modifier.padding(16.dp),

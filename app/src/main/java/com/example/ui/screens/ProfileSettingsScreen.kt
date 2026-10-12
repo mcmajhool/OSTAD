@@ -84,7 +84,8 @@ fun ProfileSettingsScreen(
                     .fillMaxWidth()
                     .testTag("profile_header_card"),
                 shape = RoundedCornerShape(20.dp),
-                colors = CardDefaults.cardColors(containerColor = NavyPrimary)
+                colors = CardDefaults.cardColors(containerColor = Color(0xFF0E1A2E)),
+                border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFF1E314D))
             ) {
                 Column(
                     modifier = Modifier
@@ -191,7 +192,7 @@ fun ProfileSettingsScreen(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.spacedBy(10.dp)
                         ) {
-                            Icon(Icons.Default.Language, contentDescription = null, tint = NavyPrimary)
+                            Icon(Icons.Default.Language, contentDescription = null, tint = GoldAccent)
                             Column {
                                 Text(
                                     text = s.appLanguageSetting,
@@ -208,7 +209,7 @@ fun ProfileSettingsScreen(
                         }
 
                         Surface(
-                            color = NavyContainer,
+                            color = Color(0xFF13223C),
                             shape = RoundedCornerShape(10.dp),
                             modifier = Modifier.clickable { onToggleLanguage() }
                         ) {
@@ -216,7 +217,7 @@ fun ProfileSettingsScreen(
                                 text = if (isAr) "تغيير إلى الفرنسية (FR)" else "Changer en Arabe",
                                 modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
                                 style = MaterialTheme.typography.labelSmall,
-                                color = NavyPrimary,
+                                color = GoldAccent,
                                 fontWeight = FontWeight.Bold
                             )
                         }
@@ -243,7 +244,7 @@ fun ProfileSettingsScreen(
                     Text(
                         text = uiState.teacherUid ?: "غير مسجل",
                         style = MaterialTheme.typography.bodySmall,
-                        color = NavyPrimary,
+                        color = GoldAccent,
                         fontWeight = FontWeight.SemiBold
                     )
                     Text(
@@ -283,13 +284,13 @@ fun ProfileSettingsScreen(
                         modifier = Modifier
                             .size(44.dp)
                             .clip(CircleShape)
-                            .background(NavyContainer),
+                            .background(Color(0xFF13223C)),
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
                             imageVector = Icons.Default.CloudDone,
                             contentDescription = null,
-                            tint = NavyPrimary,
+                            tint = GoldAccent,
                             modifier = Modifier.size(22.dp)
                         )
                     }

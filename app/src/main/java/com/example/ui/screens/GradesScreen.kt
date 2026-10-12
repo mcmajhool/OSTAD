@@ -67,6 +67,7 @@ import com.example.ui.theme.EmeraldContainer
 import com.example.ui.theme.EmeraldSuccess
 import com.example.ui.theme.GoldAccent
 import com.example.ui.theme.GoldContainer
+import com.example.ui.theme.GoldLight
 import com.example.ui.theme.NavyContainer
 import com.example.ui.theme.NavyPrimary
 import com.example.ui.viewmodel.OstadiUiState
@@ -105,7 +106,7 @@ fun GradesScreen(
             PrimaryTabRow(
                 selectedTabIndex = currentTermIndex,
                 containerColor = MaterialTheme.colorScheme.surface,
-                contentColor = NavyPrimary,
+                contentColor = GoldAccent,
                 modifier = Modifier
                     .clip(RoundedCornerShape(14.dp))
                     .testTag("grades_term_tabs")
@@ -138,8 +139,8 @@ fun GradesScreen(
                         onClick = { onSelectClassroom(null) },
                         label = { Text(s.allClassrooms) },
                         colors = FilterChipDefaults.filterChipColors(
-                            selectedContainerColor = NavyPrimary,
-                            selectedLabelColor = Color.White
+                            selectedContainerColor = GoldAccent,
+                            selectedLabelColor = Color(0xFF1A1305)
                         ),
                         shape = RoundedCornerShape(12.dp)
                     )
@@ -151,8 +152,8 @@ fun GradesScreen(
                         onClick = { onSelectClassroom(classroom.id) },
                         label = { Text(classroom.name) },
                         colors = FilterChipDefaults.filterChipColors(
-                            selectedContainerColor = NavyPrimary,
-                            selectedLabelColor = Color.White
+                            selectedContainerColor = GoldAccent,
+                            selectedLabelColor = Color(0xFF1A1305)
                         ),
                         shape = RoundedCornerShape(12.dp)
                     )
@@ -175,7 +176,7 @@ fun GradesScreen(
                     Icon(
                         imageVector = Icons.Default.Calculate,
                         contentDescription = null,
-                        tint = NavyPrimary,
+                        tint = GoldAccent,
                         modifier = Modifier.size(22.dp)
                     )
                     Column {
@@ -183,7 +184,7 @@ fun GradesScreen(
                             text = if (isAr) "سلم التنقيط وحساب المعدل الوزاري الجزائري:" else "Barème et formule de moyenne officielle :",
                             style = MaterialTheme.typography.labelSmall,
                             fontWeight = FontWeight.Bold,
-                            color = NavyPrimary
+                            color = GoldLight
                         )
                         Text(
                             text = if (isAr)
@@ -354,7 +355,7 @@ private fun GradeStudentCard(
                     Icon(
                         imageVector = Icons.Default.Edit,
                         contentDescription = "Edit",
-                        tint = NavyPrimary,
+                        tint = GoldAccent,
                         modifier = Modifier.size(18.dp)
                     )
                 }
@@ -521,7 +522,10 @@ private fun EditGradeDialog(
                 onClick = {
                     onConfirm(cVal, tVal, eVal, remarks)
                 },
-                colors = ButtonDefaults.buttonColors(containerColor = NavyPrimary),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = GoldAccent,
+                    contentColor = Color(0xFF1A1305)
+                ),
                 shape = RoundedCornerShape(10.dp),
                 modifier = Modifier.testTag("dialog_confirm_save_grade")
             ) {

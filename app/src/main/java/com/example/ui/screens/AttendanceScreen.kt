@@ -130,7 +130,7 @@ fun AttendanceScreen(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
-                            Icon(Icons.Default.Event, contentDescription = null, tint = NavyPrimary)
+                            Icon(Icons.Default.Event, contentDescription = null, tint = GoldAccent)
                             Text(
                                 text = "${s.dateLabel}: ${uiState.selectedAttendanceDate}",
                                 style = MaterialTheme.typography.titleSmall,
@@ -139,14 +139,14 @@ fun AttendanceScreen(
                         }
 
                         Surface(
-                            color = NavyContainer,
+                            color = Color(0xFF13223C),
                             shape = RoundedCornerShape(8.dp)
                         ) {
                             Text(
                                 text = if (isAr) "الفترة الصباحية" else "Matin",
                                 modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
                                 style = MaterialTheme.typography.labelSmall,
-                                color = NavyPrimary,
+                                color = GoldAccent,
                                 fontWeight = FontWeight.Bold
                             )
                         }
@@ -181,8 +181,8 @@ fun AttendanceScreen(
                         onClick = { onSelectClassroom(null) },
                         label = { Text(s.allClassrooms) },
                         colors = FilterChipDefaults.filterChipColors(
-                            selectedContainerColor = NavyPrimary,
-                            selectedLabelColor = Color.White
+                            selectedContainerColor = GoldAccent,
+                            selectedLabelColor = Color(0xFF1A1305)
                         ),
                         shape = RoundedCornerShape(12.dp)
                     )
@@ -194,8 +194,8 @@ fun AttendanceScreen(
                         onClick = { onSelectClassroom(classroom.id) },
                         label = { Text(classroom.name) },
                         colors = FilterChipDefaults.filterChipColors(
-                            selectedContainerColor = NavyPrimary,
-                            selectedLabelColor = Color.White
+                            selectedContainerColor = GoldAccent,
+                            selectedLabelColor = Color(0xFF1A1305)
                         ),
                         shape = RoundedCornerShape(12.dp)
                     )
@@ -269,9 +269,12 @@ fun AttendanceScreen(
                     .height(52.dp)
                     .testTag("save_attendance_button"),
                 shape = RoundedCornerShape(14.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = NavyPrimary)
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = GoldAccent,
+                    contentColor = Color(0xFF1A1305)
+                )
             ) {
-                Icon(Icons.Default.CheckCircle, contentDescription = null, tint = GoldAccent)
+                Icon(Icons.Default.CheckCircle, contentDescription = null, tint = Color(0xFF1A1305))
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
                     text = s.saveAttendance,

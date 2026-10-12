@@ -98,8 +98,8 @@ fun StudentsScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = { onOpenAddStudentDialog(true) },
-                containerColor = NavyPrimary,
-                contentColor = Color.White,
+                containerColor = GoldAccent,
+                contentColor = Color(0xFF1A1305),
                 shape = RoundedCornerShape(16.dp),
                 modifier = Modifier.testTag("fab_add_student")
             ) {
@@ -119,7 +119,7 @@ fun StudentsScreen(
                 onValueChange = onSearchQueryChange,
                 placeholder = { Text(s.searchStudentPlaceholder) },
                 leadingIcon = {
-                    Icon(Icons.Default.Search, contentDescription = null, tint = NavyPrimary)
+                    Icon(Icons.Default.Search, contentDescription = null, tint = GoldAccent)
                 },
                 trailingIcon = {
                     if (uiState.searchQuery.isNotEmpty()) {
@@ -149,8 +149,8 @@ fun StudentsScreen(
                         onClick = { onSelectClassroom(null) },
                         label = { Text(s.allClassrooms) },
                         colors = FilterChipDefaults.filterChipColors(
-                            selectedContainerColor = NavyPrimary,
-                            selectedLabelColor = Color.White
+                            selectedContainerColor = GoldAccent,
+                            selectedLabelColor = Color(0xFF1A1305)
                         ),
                         shape = RoundedCornerShape(12.dp)
                     )
@@ -162,8 +162,8 @@ fun StudentsScreen(
                         onClick = { onSelectClassroom(classroom.id) },
                         label = { Text(classroom.name) },
                         colors = FilterChipDefaults.filterChipColors(
-                            selectedContainerColor = NavyPrimary,
-                            selectedLabelColor = Color.White
+                            selectedContainerColor = GoldAccent,
+                            selectedLabelColor = Color(0xFF1A1305)
                         ),
                         shape = RoundedCornerShape(12.dp)
                     )
@@ -459,7 +459,10 @@ private fun AddStudentDialog(
                         onConfirm(firstName, lastName, gender, selectedClassId, phone, regNumber)
                     }
                 },
-                colors = ButtonDefaults.buttonColors(containerColor = NavyPrimary),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = GoldAccent,
+                    contentColor = Color(0xFF1A1305)
+                ),
                 shape = RoundedCornerShape(10.dp),
                 modifier = Modifier.testTag("dialog_confirm_add_student")
             ) {
@@ -526,7 +529,7 @@ private fun StudentDetailsDialog(
                     },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(10.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = NavyContainer, contentColor = NavyPrimary)
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1E3A66), contentColor = GoldAccent)
                 ) {
                     Icon(Icons.Default.Call, contentDescription = null, modifier = Modifier.size(18.dp))
                     Spacer(modifier = Modifier.width(8.dp))
@@ -537,7 +540,10 @@ private fun StudentDetailsDialog(
         confirmButton = {
             Button(
                 onClick = onDismiss,
-                colors = ButtonDefaults.buttonColors(containerColor = NavyPrimary),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = GoldAccent,
+                    contentColor = Color(0xFF1A1305)
+                ),
                 shape = RoundedCornerShape(10.dp)
             ) {
                 Text(s.close)

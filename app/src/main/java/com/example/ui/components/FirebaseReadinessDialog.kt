@@ -37,6 +37,7 @@ import androidx.compose.ui.unit.sp
 import com.example.localization.AppLanguage
 import com.example.localization.AppStrings
 import com.example.ui.theme.EmeraldSuccess
+import com.example.ui.theme.GoldAccent
 import com.example.ui.theme.NavyPrimary
 
 @Composable
@@ -52,7 +53,10 @@ fun FirebaseReadinessDialog(
         confirmButton = {
             Button(
                 onClick = onDismiss,
-                colors = ButtonDefaults.buttonColors(containerColor = NavyPrimary),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = GoldAccent,
+                    contentColor = Color(0xFF1A1305)
+                ),
                 shape = RoundedCornerShape(10.dp)
             ) {
                 Text(s.close)
@@ -143,7 +147,7 @@ private fun ArchitectureFeatureItem(
         Icon(
             imageVector = icon,
             contentDescription = null,
-            tint = NavyPrimary,
+            tint = GoldAccent,
             modifier = Modifier
                 .size(18.dp)
                 .padding(top = 2.dp)

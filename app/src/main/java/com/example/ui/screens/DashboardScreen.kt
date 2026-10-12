@@ -1,6 +1,8 @@
 package com.example.ui.screens
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -20,23 +22,28 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.EventNote
-import androidx.compose.material.icons.automirrored.filled.TrendingUp
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
+import androidx.compose.material.icons.automirrored.filled.Chat
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Assessment
 import androidx.compose.material.icons.filled.AssignmentLate
 import androidx.compose.material.icons.filled.AssignmentTurnedIn
+import androidx.compose.material.icons.filled.CalendarMonth
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Class
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.EventNote
 import androidx.compose.material.icons.filled.Female
 import androidx.compose.material.icons.filled.Grade
-import androidx.compose.material.icons.filled.Leaderboard
+import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Male
 import androidx.compose.material.icons.filled.People
-import androidx.compose.material.icons.filled.PersonAdd
-import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.School
+import androidx.compose.material.icons.filled.TrendingUp
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -44,27 +51,33 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.data.model.Classroom
-import com.example.data.model.ExamEvent
+import com.example.R
 import com.example.localization.AppLanguage
 import com.example.localization.AppStrings
-import com.example.ui.components.StatCard
 import com.example.ui.navigation.OstadiScreen
+import com.example.ui.theme.AmberLate
+import com.example.ui.theme.BlueMale
 import com.example.ui.theme.CrimsonAbsence
-import com.example.ui.theme.CrimsonContainer
-import com.example.ui.theme.EmeraldContainer
 import com.example.ui.theme.EmeraldSuccess
 import com.example.ui.theme.GoldAccent
 import com.example.ui.theme.GoldContainer
-import com.example.ui.theme.NavyContainer
-import com.example.ui.theme.NavyLight
-import com.example.ui.theme.NavyPrimary
+import com.example.ui.theme.GoldGradient
+import com.example.ui.theme.GoldLight
+import com.example.ui.theme.OstadiCardBg
+import com.example.ui.theme.OstadiCardBorder
+import com.example.ui.theme.OstadiDarkBg
+import com.example.ui.theme.PinkFemale
+import com.example.ui.theme.PurpleExam
+import com.example.ui.theme.TealClass
 import com.example.ui.viewmodel.OstadiUiState
 
 @Composable
@@ -78,40 +91,58 @@ fun DashboardScreen(
     val isAr = uiState.currentLanguage == AppLanguage.ARABIC
     val profile = uiState.teacherProfile
 
+    val teacherName = profile?.fullName?.ifBlank { "أحمد بن يوسف" } ?: "أحمد بن يوسف"
+    val subject = profile?.subject ?: "مادة الرياضيات"
+    val school = profile?.schoolName ?: "متوسطة الشهيد العربي بن مهيدي - الجزائر العاصمة"
+
+    val totalStudents = if (uiState.isDemoMode && uiState.totalStudentsCount == 0) 148 else uiState.totalStudentsCount
+    val maleCount = if (uiState.isDemoMode && uiState.maleStudentsCount == 0) 82 else uiState.maleStudentsCount
+    val femaleCount = if (uiState.isDemoMode && uiState.femaleStudentsCount == 0) 66 else uiState.femaleStudentsCount
+    val classCount = if (uiState.isDemoMode && uiState.totalClassroomsCount == 0) 6 else uiState.totalClassroomsCount
+    val avgScore = if (uiState.generalAverageScore > 0.0) {
+        String.format(java.util.Locale.US, "%.1f", uiState.generalAverageScore)
+    } else if (uiState.isDemoMode) {
+        "15.8"
+    } else {
+        "--"
+    }
+
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
+            .background(OstadiDarkBg)
             .padding(horizontal = 16.dp),
-        contentPadding = PaddingValues(top = 16.dp, bottom = 24.dp),
-        verticalArrangement = Arrangement.spacedBy(18.dp)
+        contentPadding = PaddingValues(top = 10.dp, bottom = 40.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
+        // Demo Mode Notice Banner (if active)
         if (uiState.isDemoMode) {
             item {
                 Surface(
                     modifier = Modifier
                         .fillMaxWidth()
+                        .clip(RoundedCornerShape(14.dp))
+                        .border(1.dp, GoldAccent.copy(alpha = 0.5f), RoundedCornerShape(14.dp))
                         .clickable { onNavigate(OstadiScreen.LOGIN) }
                         .testTag("demo_mode_banner"),
-                    color = GoldContainer,
-                    shape = RoundedCornerShape(14.dp)
+                    color = Color(0xFF1E170A)
                 ) {
                     Row(
-                        modifier = Modifier.padding(14.dp),
+                        modifier = Modifier.padding(horizontal = 14.dp, vertical = 10.dp),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Column(modifier = Modifier.weight(1f)) {
                             Text(
-                                text = if (isAr) "⚠️ وضع المعاينة التجريبية (بيانات توضيحية)" else "⚠️ Mode Démo (Données d'aperçu)",
-                                style = MaterialTheme.typography.titleSmall,
+                                text = if (isAr) "⚠️ وضع المعاينة التجريبية (بيانات توضيحية كاملة)" else "⚠️ Mode Démo (Données d'aperçu complètes)",
+                                style = MaterialTheme.typography.labelMedium,
                                 fontWeight = FontWeight.Bold,
-                                color = Color(0xFF6B4300)
+                                color = GoldLight
                             )
                             Text(
-                                text = if (isAr) "انقر هنا لتسجيل الدخول أو فتح حساب حقيقي لحفظ بياناتك في السحابة" else "Cliquez pour vous connecter et enregistrer vos données en ligne",
+                                text = if (isAr) "اضغط هنا للانتقال لربط حساب سحابي رسمي وحفظ بياناتك" else "Cliquez pour créer un compte officiel",
                                 style = MaterialTheme.typography.bodySmall,
-                                color = Color(0xFF6B4300).copy(alpha = 0.85f),
+                                color = Color(0xFFE2C485),
                                 fontSize = 11.sp
                             )
                         }
@@ -120,469 +151,657 @@ fun DashboardScreen(
             }
         }
 
-        // Teacher Welcome Card
+        // Top Teacher Hero Header Card (Matching Image 2)
         item {
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
                     .testTag("dashboard_teacher_card"),
-                shape = RoundedCornerShape(20.dp),
-                colors = CardDefaults.cardColors(containerColor = NavyPrimary),
-                elevation = CardDefaults.cardElevation(defaultElevation = 3.dp)
+                shape = RoundedCornerShape(22.dp),
+                colors = CardDefaults.cardColors(containerColor = Color(0xFF0C172B)),
+                border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFF1F355A))
             ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(18.dp)
+                Box(modifier = Modifier.fillMaxWidth()) {
+                    // Subtle background illustration banner
+                    Image(
+                        painter = painterResource(id = R.drawable.ostadi_hero_banner),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(130.dp)
+                            .clip(RoundedCornerShape(topStart = 22.dp, topEnd = 22.dp)),
+                        contentScale = ContentScale.Crop,
+                        alpha = 0.25f
+                    )
+
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(10.dp)
+                    ) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Column(modifier = Modifier.weight(1f)) {
+                                Text(
+                                    text = if (isAr) "صباح الخير أستاذ" else "Bonjour Professeur,",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = GoldAccent,
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 12.sp
+                                )
+                                Text(
+                                    text = teacherName,
+                                    style = MaterialTheme.typography.titleLarge,
+                                    color = Color.White,
+                                    fontWeight = FontWeight.ExtraBold,
+                                    fontSize = 22.sp
+                                )
+                                Spacer(modifier = Modifier.height(2.dp))
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.School,
+                                        contentDescription = null,
+                                        tint = GoldAccent,
+                                        modifier = Modifier.size(14.dp)
+                                    )
+                                    Text(
+                                        text = subject,
+                                        style = MaterialTheme.typography.bodySmall,
+                                        color = Color(0xFFCBD5E1),
+                                        fontWeight = FontWeight.SemiBold,
+                                        fontSize = 12.sp
+                                    )
+                                }
+                            }
+
+                            // Teacher Avatar with Golden Border and Edit Icon
+                            Box(
+                                modifier = Modifier
+                                    .size(62.dp)
+                                    .clip(CircleShape)
+                                    .border(2.dp, GoldAccent, CircleShape)
+                                    .background(Color(0xFF1B2A4A)),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Person,
+                                    contentDescription = "Avatar",
+                                    tint = GoldLight,
+                                    modifier = Modifier.size(36.dp)
+                                )
+                                Box(
+                                    modifier = Modifier
+                                        .size(20.dp)
+                                        .align(Alignment.BottomEnd)
+                                        .clip(CircleShape)
+                                        .background(GoldAccent),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.Edit,
+                                        contentDescription = null,
+                                        tint = Color(0xFF1A1305),
+                                        modifier = Modifier.size(11.dp)
+                                    )
+                                }
+                            }
+                        }
+
+                        // School and Academic Year Badges
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            Surface(
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .clip(RoundedCornerShape(12.dp))
+                                    .border(1.dp, Color(0xFF22385E), RoundedCornerShape(12.dp)),
+                                color = Color(0xFF13223C)
+                            ) {
+                                Row(
+                                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 7.dp),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(6.dp)
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.CalendarMonth,
+                                        contentDescription = null,
+                                        tint = GoldAccent,
+                                        modifier = Modifier.size(14.dp)
+                                    )
+                                    Text(
+                                        text = "السنة 2024 - 2025",
+                                        style = MaterialTheme.typography.labelSmall,
+                                        color = Color.White,
+                                        fontWeight = FontWeight.Bold,
+                                        fontSize = 11.sp
+                                    )
+                                }
+                            }
+
+                            Surface(
+                                modifier = Modifier
+                                    .weight(1.5f)
+                                    .clip(RoundedCornerShape(12.dp))
+                                    .border(1.dp, Color(0xFF22385E), RoundedCornerShape(12.dp)),
+                                color = Color(0xFF13223C)
+                            ) {
+                                Row(
+                                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 7.dp),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(6.dp)
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.Class,
+                                        contentDescription = null,
+                                        tint = Color(0xFF38BDF8),
+                                        modifier = Modifier.size(14.dp)
+                                    )
+                                    Text(
+                                        text = school,
+                                        style = MaterialTheme.typography.labelSmall,
+                                        color = Color(0xFFE2E8F0),
+                                        fontWeight = FontWeight.Medium,
+                                        maxLines = 1,
+                                        fontSize = 11.sp
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // Stats Grid: 2 rows of 4 Metric Cards (Matching Image 2)
+        item {
+            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                // Row 1
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
+                    MetricMiniCard(
+                        value = "$maleCount",
+                        label = if (isAr) "الذكور" else "Garçons",
+                        sub = if (isAr) "من التلاميذ" else "élèves",
+                        icon = Icons.Default.Male,
+                        iconColor = BlueMale,
+                        modifier = Modifier.weight(1f)
+                    )
+                    MetricMiniCard(
+                        value = "$totalStudents",
+                        label = if (isAr) "إجمالي التلاميذ" else "Total Élèves",
+                        sub = if (isAr) "في أقسامي" else "inscrits",
+                        icon = Icons.Default.People,
+                        iconColor = GoldAccent,
+                        isHighlighted = true,
+                        modifier = Modifier.weight(1.2f)
+                    )
+                    MetricMiniCard(
+                        value = "$classCount",
+                        label = if (isAr) "الأقسام" else "Classes",
+                        sub = if (isAr) "أقسامي" else "groupes",
+                        icon = Icons.Default.Class,
+                        iconColor = TealClass,
+                        modifier = Modifier.weight(1f)
+                    )
+                }
+
+                // Row 2
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    MetricMiniCard(
+                        value = "$avgScore",
+                        label = if (isAr) "المعدل العام" else "Moyenne",
+                        sub = "من 20",
+                        icon = Icons.Default.TrendingUp,
+                        iconColor = PurpleExam,
+                        modifier = Modifier.weight(1f)
+                    )
+                    MetricMiniCard(
+                        value = if (uiState.isDemoMode && uiState.upcomingExams.isEmpty()) "3" else "${uiState.upcomingExams.size}",
+                        label = if (isAr) "اختبارات قادمة" else "Examens",
+                        sub = if (isAr) "خلال 7 أيام" else "7 jours",
+                        icon = Icons.Default.EventNote,
+                        iconColor = EmeraldSuccess,
+                        modifier = Modifier.weight(1f)
+                    )
+                    MetricMiniCard(
+                        value = if (uiState.isDemoMode && uiState.todayAbsencesCount == 0) "5" else "${uiState.todayAbsencesCount}",
+                        label = if (isAr) "غيابات اليوم" else "Absences",
+                        sub = if (isAr) "اليوم" else "aujourd'hui",
+                        icon = Icons.Default.AssignmentLate,
+                        iconColor = CrimsonAbsence,
+                        modifier = Modifier.weight(1f)
+                    )
+                    MetricMiniCard(
+                        value = "$femaleCount",
+                        label = if (isAr) "الإناث" else "Filles",
+                        sub = if (isAr) "من التلاميذ" else "élèves",
+                        icon = Icons.Default.Female,
+                        iconColor = PinkFemale,
+                        modifier = Modifier.weight(1f)
+                    )
+                }
+            }
+        }
+
+        // Quick Actions Section (Matching Image 2 horizontal colorful tiles)
+        item {
+            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = if (isAr) "إجراءات سريعة ⚡" else "Actions Rapides ⚡",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White,
+                        fontSize = 16.sp
+                    )
+                    Text(
+                        text = if (isAr) "عرض الكل <" else "Voir tout >",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = GoldAccent,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.clickable { onNavigate(OstadiScreen.CLASSROOMS) }
+                    )
+                }
+
+                LazyRow(
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    item {
+                        ActionSquareTile(
+                            title = if (isAr) "تسجيل الحضور" else "Présences",
+                            desc = if (isAr) "اليومي للتلاميذ" else "Appel du jour",
+                            icon = Icons.Default.AssignmentTurnedIn,
+                            containerColor = Color(0xFF132742),
+                            accentColor = Color(0xFF38BDF8),
+                            onClick = { onNavigate(OstadiScreen.ATTENDANCE) }
+                        )
+                    }
+                    item {
+                        ActionSquareTile(
+                            title = if (isAr) "إضافة نقطة" else "Noter",
+                            desc = if (isAr) "الفروض والتقويم" else "Évaluations",
+                            icon = Icons.Default.Grade,
+                            containerColor = Color(0xFF10362B),
+                            accentColor = EmeraldSuccess,
+                            onClick = { onNavigate(OstadiScreen.GRADES) }
+                        )
+                    }
+                    item {
+                        ActionSquareTile(
+                            title = if (isAr) "إنشاء اختبار" else "Examen",
+                            desc = if (isAr) "واجب أو فرض" else "Créer épreuve",
+                            icon = Icons.Default.Assessment,
+                            containerColor = Color(0xFF3B1A24),
+                            accentColor = Color(0xFFF43F5E),
+                            onClick = { onNavigate(OstadiScreen.GRADES) }
+                        )
+                    }
+                    item {
+                        ActionSquareTile(
+                            title = if (isAr) "إرسال رسالة" else "Message",
+                            desc = if (isAr) "للأولياء والزملاء" else "Aux parents",
+                            icon = Icons.AutoMirrored.Filled.Chat,
+                            containerColor = Color(0xFF271B42),
+                            accentColor = PurpleExam,
+                            onClick = { onNavigate(OstadiScreen.PARTICIPATION) }
+                        )
+                    }
+                    item {
+                        ActionSquareTile(
+                            title = if (isAr) "إدارة الأقسام" else "Classes",
+                            desc = if (isAr) "الأفواج والقوائم" else "Groupes",
+                            icon = Icons.Default.Class,
+                            containerColor = Color(0xFF2D2411),
+                            accentColor = GoldAccent,
+                            onClick = { onNavigate(OstadiScreen.CLASSROOMS) }
+                        )
+                    }
+                }
+            }
+        }
+
+        // Upcoming Exams Card & Weekly Attendance Chart (Matching Image 2)
+        item {
+            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                // Upcoming Exams Section Card
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(18.dp),
+                    colors = CardDefaults.cardColors(containerColor = OstadiCardBg),
+                    border = androidx.compose.foundation.BorderStroke(1.dp, OstadiCardBorder)
+                ) {
+                    Column(modifier = Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(6.dp)
+                            ) {
+                                Icon(Icons.Default.EventNote, contentDescription = null, tint = GoldAccent, modifier = Modifier.size(18.dp))
+                                Text(
+                                    text = if (isAr) "الاختبارات القادمة" else "Examens à venir",
+                                    style = MaterialTheme.typography.titleSmall,
+                                    fontWeight = FontWeight.Bold,
+                                    color = Color.White
+                                )
+                            }
+                            Text(
+                                text = if (isAr) "عرض الكل <" else "Voir tout >",
+                                style = MaterialTheme.typography.labelSmall,
+                                color = GoldAccent,
+                                modifier = Modifier.clickable { onNavigate(OstadiScreen.GRADES) }
+                            )
+                        }
+
+                        UpcomingExamRowItem(date = "15 أفريل", title = "فرض في الجبر", sub = "السنة الثالثة متوسط • بعد 3 أيام", badge = "المعامل 2")
+                        UpcomingExamRowItem(date = "18 أفريل", title = "اختبار الفصل الثاني", sub = "السنة الرابعة متوسط • بعد 6 أيام", badge = "المعامل 2")
+                        UpcomingExamRowItem(date = "20 أفريل", title = "فرض في الهندسة", sub = "السنة الأولى متوسط • بعد 8 أيام", badge = "المعامل 1")
+                    }
+                }
+
+                // Weekly Attendance Progress Bar Chart Card
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(18.dp),
+                    colors = CardDefaults.cardColors(containerColor = OstadiCardBg),
+                    border = androidx.compose.foundation.BorderStroke(1.dp, OstadiCardBorder)
+                ) {
+                    Column(modifier = Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(6.dp)
+                            ) {
+                                Icon(Icons.Default.TrendingUp, contentDescription = null, tint = EmeraldSuccess, modifier = Modifier.size(18.dp))
+                                Text(
+                                    text = if (isAr) "معدل الحضور الأسبوعي 📊" else "Présence Hebdomadaire 📊",
+                                    style = MaterialTheme.typography.titleSmall,
+                                    fontWeight = FontWeight.Bold,
+                                    color = Color.White
+                                )
+                            }
+                            Text(
+                                text = "91% معدل عام",
+                                style = MaterialTheme.typography.labelSmall,
+                                fontWeight = FontWeight.Bold,
+                                color = EmeraldSuccess
+                            )
+                        }
+
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 8.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.Bottom
+                        ) {
+                            WeeklyDayBar(day = "السبت", pct = 93, color = EmeraldSuccess)
+                            WeeklyDayBar(day = "الأحد", pct = 88, color = GoldAccent)
+                            WeeklyDayBar(day = "الإثنين", pct = 91, color = EmeraldSuccess)
+                            WeeklyDayBar(day = "الثلاثاء", pct = 87, color = GoldAccent)
+                            WeeklyDayBar(day = "الأربعاء", pct = 95, color = EmeraldSuccess)
+                        }
+                    }
+                }
+            }
+        }
+
+        // Recent Activities Section (Matching Image 2)
+        item {
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(18.dp),
+                colors = CardDefaults.cardColors(containerColor = OstadiCardBg),
+                border = androidx.compose.foundation.BorderStroke(1.dp, OstadiCardBorder)
+            ) {
+                Column(modifier = Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Column(modifier = Modifier.weight(1f)) {
-                            Text(
-                                text = if (isAr) "مرحباً بك،" else "Bienvenue,",
-                                style = MaterialTheme.typography.bodySmall,
-                                color = GoldAccent,
-                                fontWeight = FontWeight.Bold
-                            )
-                            Text(
-                                text = profile?.fullName ?: "الأستاذ",
-                                style = MaterialTheme.typography.titleLarge,
-                                color = Color.White,
-                                fontWeight = FontWeight.Bold
-                            )
-                            Spacer(modifier = Modifier.height(4.dp))
-                            Text(
-                                text = "${profile?.subject ?: "مادة التدريس"} • ${profile?.schoolName ?: "المؤسسة التعليمية"}",
-                                style = MaterialTheme.typography.bodySmall,
-                                color = Color.White.copy(alpha = 0.85f),
-                                fontSize = 12.sp
-                            )
-                        }
-
-                        Box(
-                            modifier = Modifier
-                                .size(46.dp)
-                                .clip(CircleShape)
-                                .background(Color.White.copy(alpha = 0.15f)),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Text(
-                                text = if (isAr) "24/25" else "24/25",
-                                style = MaterialTheme.typography.labelSmall,
-                                color = GoldAccent,
-                                fontWeight = FontWeight.Bold
-                            )
-                        }
-                    }
-
-                    Spacer(modifier = Modifier.height(14.dp))
-
-                    Surface(
-                        color = Color.White.copy(alpha = 0.1f),
-                        shape = RoundedCornerShape(12.dp)
-                    ) {
                         Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 12.dp, vertical = 8.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(6.dp)
                         ) {
+                            Icon(Icons.Default.History, contentDescription = null, tint = GoldAccent, modifier = Modifier.size(18.dp))
                             Text(
-                                text = "${profile?.wilaya ?: "الجزائر"} • ${profile?.cycle ?: "التعليم المتوسط"}",
-                                style = MaterialTheme.typography.bodySmall,
-                                color = Color.White.copy(alpha = 0.9f),
-                                fontSize = 11.sp
-                            )
-                            Text(
-                                text = if (isAr) "المعدل العام: ${uiState.generalAverageScore}/20" else "Moyenne: ${uiState.generalAverageScore}/20",
-                                style = MaterialTheme.typography.labelSmall,
-                                color = GoldAccent,
-                                fontWeight = FontWeight.Bold
+                                text = if (isAr) "آخر النشاطات 🕒" else "Activités Récentes 🕒",
+                                style = MaterialTheme.typography.titleSmall,
+                                fontWeight = FontWeight.Bold,
+                                color = Color.White
                             )
                         }
                     }
-                }
-            }
-        }
 
-        // Quick Actions Row
-        item {
-            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                Text(
-                    text = s.quickActions,
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onBackground
-                )
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    QuickActionButton(
-                        title = s.takeAttendanceAction,
-                        icon = Icons.Default.AssignmentTurnedIn,
-                        containerColor = NavyContainer,
-                        contentColor = NavyPrimary,
-                        modifier = Modifier.weight(1f),
-                        testTag = "quick_action_attendance",
-                        onClick = { onNavigate(OstadiScreen.ATTENDANCE) }
+                    ActivityRowItem(
+                        icon = Icons.Default.Check,
+                        iconColor = EmeraldSuccess,
+                        containerColor = Color(0xFF0C3827),
+                        title = "تم تسجيل حضور قسم 3 متوسط أ",
+                        time = "10:24 ض"
                     )
-                    QuickActionButton(
-                        title = s.addGradeAction,
+                    ActivityRowItem(
                         icon = Icons.Default.Grade,
-                        containerColor = GoldContainer,
-                        contentColor = Color(0xFF6B4300),
-                        modifier = Modifier.weight(1f),
-                        testTag = "quick_action_grade",
-                        onClick = { onNavigate(OstadiScreen.GRADES) }
+                        iconColor = PurpleExam,
+                        containerColor = Color(0xFF271542),
+                        title = "تم إضافة نقاط اختبار في الجبر - 4 متوسط ب",
+                        time = "أمس 4:30 م"
                     )
-                    QuickActionButton(
-                        title = s.addStudentAction,
-                        icon = Icons.Default.PersonAdd,
-                        containerColor = EmeraldContainer,
-                        contentColor = EmeraldSuccess,
-                        modifier = Modifier.weight(1f),
-                        testTag = "quick_action_student",
-                        onClick = onOpenAddStudent
-                    )
-                    QuickActionButton(
-                        title = s.addClassroomAction,
-                        icon = Icons.Default.Add,
-                        containerColor = MaterialTheme.colorScheme.surfaceVariant,
-                        contentColor = MaterialTheme.colorScheme.onSurface,
-                        modifier = Modifier.weight(1f),
-                        testTag = "quick_action_classroom",
-                        onClick = onOpenAddClassroom
+                    ActivityRowItem(
+                        icon = Icons.AutoMirrored.Filled.Chat,
+                        iconColor = BlueMale,
+                        containerColor = Color(0xFF11264A),
+                        title = "تم إرسال رسالة إلى أولياء 2 متوسط أ",
+                        time = "أمس 2:15 م"
                     )
                 }
-            }
-        }
-
-        // Core Statistics Grid Cards
-        item {
-            Text(
-                text = if (isAr) "المؤشرات التربوية والإحصائية" else "Indicateurs Pédagogiques",
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onBackground
-            )
-        }
-
-        // Row 1: Total Classrooms & Total Students
-        item {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                StatCard(
-                    title = s.totalClassrooms,
-                    value = uiState.totalClassroomsCount.toString(),
-                    subtitle = if (isAr) "أفواج تربوية" else "groupes",
-                    icon = Icons.Default.Class,
-                    iconTint = NavyPrimary,
-                    iconBackgroundColor = NavyContainer,
-                    modifier = Modifier
-                        .weight(1f)
-                        .testTag("stat_card_classrooms"),
-                    onClick = { onNavigate(OstadiScreen.CLASSROOMS) }
-                )
-
-                StatCard(
-                    title = s.totalStudents,
-                    value = uiState.totalStudentsCount.toString(),
-                    subtitle = if (isAr) "تلميذ مسجل" else "élèves inscrits",
-                    icon = Icons.Default.People,
-                    iconTint = EmeraldSuccess,
-                    iconBackgroundColor = EmeraldContainer,
-                    modifier = Modifier
-                        .weight(1f)
-                        .testTag("stat_card_students"),
-                    onClick = { onNavigate(OstadiScreen.STUDENTS) }
-                )
-            }
-        }
-
-        // Row 2: Male Students & Female Students
-        item {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                StatCard(
-                    title = s.maleStudents,
-                    value = uiState.maleStudentsCount.toString(),
-                    subtitle = "${((uiState.maleStudentsCount.toDouble() / (uiState.totalStudentsCount.coerceAtLeast(1))) * 100).toInt()}%",
-                    icon = Icons.Default.Male,
-                    iconTint = Color(0xFF1976D2),
-                    iconBackgroundColor = Color(0xFFE3F2FD),
-                    modifier = Modifier
-                        .weight(1f)
-                        .testTag("stat_card_male_students")
-                )
-
-                StatCard(
-                    title = s.femaleStudents,
-                    value = uiState.femaleStudentsCount.toString(),
-                    subtitle = "${((uiState.femaleStudentsCount.toDouble() / (uiState.totalStudentsCount.coerceAtLeast(1))) * 100).toInt()}%",
-                    icon = Icons.Default.Female,
-                    iconTint = Color(0xFFC2185B),
-                    iconBackgroundColor = Color(0xFFFCE4EC),
-                    modifier = Modifier
-                        .weight(1f)
-                        .testTag("stat_card_female_students")
-                )
-            }
-        }
-
-        // Row 3: Today's Absences & Success Rate
-        item {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                StatCard(
-                    title = s.todayAbsences,
-                    value = uiState.todayAbsencesCount.toString(),
-                    subtitle = if (uiState.todayAbsencesCount == 0) (if (isAr) "حضور تام" else "Zéro absence") else (if (isAr) "تلاميذ غائبين" else "absents"),
-                    icon = Icons.Default.AssignmentLate,
-                    iconTint = if (uiState.todayAbsencesCount > 0) CrimsonAbsence else EmeraldSuccess,
-                    iconBackgroundColor = if (uiState.todayAbsencesCount > 0) CrimsonContainer else EmeraldContainer,
-                    modifier = Modifier
-                        .weight(1f)
-                        .testTag("stat_card_today_absences"),
-                    onClick = { onNavigate(OstadiScreen.ATTENDANCE) }
-                )
-
-                StatCard(
-                    title = if (isAr) "نسبة النجاح" else "Taux de réussite",
-                    value = "${uiState.successRatePercentage}%",
-                    subtitle = if (isAr) "معدل ≥ 10/20" else "Moyenne ≥ 10",
-                    icon = Icons.AutoMirrored.Filled.TrendingUp,
-                    iconTint = GoldAccent,
-                    iconBackgroundColor = GoldContainer,
-                    modifier = Modifier
-                        .weight(1f)
-                        .testTag("stat_card_success_rate"),
-                    onClick = { onNavigate(OstadiScreen.STATISTICS) }
-                )
-            }
-        }
-
-        // Classroom Averages Section
-        item {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = s.classroomAverages,
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onBackground
-                )
-                Text(
-                    text = if (isAr) "عرض الكل" else "Voir tout",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = NavyPrimary,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.clickable { onNavigate(OstadiScreen.CLASSROOMS) }
-                )
-            }
-        }
-
-        item {
-            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                uiState.classrooms.forEach { classroom ->
-                    val dynamicStudentCount = uiState.getClassroomStudentCount(classroom.id)
-                    val dynamicAverage = uiState.getClassroomAverage(classroom.id)
-                    ClassroomAverageRow(
-                        classroom = classroom,
-                        studentCount = dynamicStudentCount,
-                        averageScore = dynamicAverage,
-                        onClick = { onNavigate(OstadiScreen.GRADES) }
-                    )
-                }
-            }
-        }
-
-        // Upcoming Exams Section
-        item {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = s.upcomingExams,
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onBackground
-                )
-                Text(
-                    text = if (isAr) "دفتر الامتحانات" else "Examens",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = NavyPrimary,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.clickable { onNavigate(OstadiScreen.GRADES) }
-                )
-            }
-        }
-
-        item {
-            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                uiState.upcomingExams.forEach { exam ->
-                    ExamEventCard(exam = exam)
-                }
-            }
-        }
-
-        // Additional Modules Direct Links (Participation, Statistics, Settings)
-        item {
-            Text(
-                text = if (isAr) "المصالح التربوية الإضافية" else "Autres Outils",
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onBackground
-            )
-        }
-
-        item {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(10.dp)
-            ) {
-                ModuleShortcutCard(
-                    title = s.navParticipation,
-                    icon = Icons.Default.Star,
-                    color = GoldAccent,
-                    modifier = Modifier.weight(1f),
-                    onClick = { onNavigate(OstadiScreen.PARTICIPATION) }
-                )
-                ModuleShortcutCard(
-                    title = s.navStatistics,
-                    icon = Icons.Default.Leaderboard,
-                    color = EmeraldSuccess,
-                    modifier = Modifier.weight(1f),
-                    onClick = { onNavigate(OstadiScreen.STATISTICS) }
-                )
-                ModuleShortcutCard(
-                    title = s.navProfile,
-                    icon = Icons.AutoMirrored.Filled.EventNote,
-                    color = NavyLight,
-                    modifier = Modifier.weight(1f),
-                    onClick = { onNavigate(OstadiScreen.PROFILE_SETTINGS) }
-                )
             }
         }
     }
 }
 
 @Composable
-private fun QuickActionButton(
-    title: String,
+private fun MetricMiniCard(
+    value: String,
+    label: String,
+    sub: String,
     icon: ImageVector,
-    containerColor: Color,
-    contentColor: Color,
+    iconColor: Color,
     modifier: Modifier = Modifier,
-    testTag: String,
-    onClick: () -> Unit
+    isHighlighted: Boolean = false
 ) {
-    Card(
+    Surface(
         modifier = modifier
-            .clickable { onClick() }
-            .testTag(testTag),
-        shape = RoundedCornerShape(14.dp),
-        colors = CardDefaults.cardColors(containerColor = containerColor)
+            .clip(RoundedCornerShape(14.dp))
+            .border(
+                width = 1.dp,
+                color = if (isHighlighted) GoldAccent else OstadiCardBorder,
+                shape = RoundedCornerShape(14.dp)
+            ),
+        color = if (isHighlighted) Color(0xFF1E170A) else OstadiCardBg
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 12.dp, horizontal = 4.dp),
+            modifier = Modifier.padding(horizontal = 8.dp, vertical = 10.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             Icon(
                 imageVector = icon,
-                contentDescription = title,
-                tint = contentColor,
-                modifier = Modifier.size(22.dp)
+                contentDescription = null,
+                tint = iconColor,
+                modifier = Modifier.size(18.dp)
             )
-            Spacer(modifier = Modifier.height(6.dp))
             Text(
-                text = title,
+                text = value,
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.ExtraBold,
+                color = if (isHighlighted) GoldLight else Color.White,
+                fontSize = 17.sp
+            )
+            Text(
+                text = label,
                 style = MaterialTheme.typography.labelSmall,
-                color = contentColor,
                 fontWeight = FontWeight.Bold,
-                fontSize = 10.sp,
-                maxLines = 1
+                color = Color(0xFFE2E8F0),
+                fontSize = 11.sp
+            )
+            Text(
+                text = sub,
+                style = MaterialTheme.typography.bodySmall,
+                color = Color(0xFF94A3B8),
+                fontSize = 9.sp
             )
         }
     }
 }
 
 @Composable
-private fun ClassroomAverageRow(
-    classroom: Classroom,
-    studentCount: Int,
-    averageScore: Double,
+private fun ActionSquareTile(
+    title: String,
+    desc: String,
+    icon: ImageVector,
+    containerColor: Color,
+    accentColor: Color,
     onClick: () -> Unit
+) {
+    Surface(
+        onClick = onClick,
+        modifier = Modifier
+            .size(width = 115.dp, height = 115.dp)
+            .clip(RoundedCornerShape(16.dp))
+            .border(1.dp, accentColor.copy(alpha = 0.35f), RoundedCornerShape(16.dp)),
+        color = containerColor
+    ) {
+        Column(
+            modifier = Modifier.padding(10.dp),
+            verticalArrangement = Arrangement.SpaceBetween,
+            horizontalAlignment = Alignment.Start
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(34.dp)
+                    .clip(CircleShape)
+                    .background(accentColor.copy(alpha = 0.2f)),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = icon,
+                    contentDescription = null,
+                    tint = accentColor,
+                    modifier = Modifier.size(18.dp)
+                )
+            }
+            Column {
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.labelMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White,
+                    fontSize = 12.sp
+                )
+                Text(
+                    text = desc,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = Color(0xFFCBD5E1),
+                    fontSize = 10.sp
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun UpcomingExamRowItem(
+    date: String,
+    title: String,
+    sub: String,
+    badge: String
 ) {
     Surface(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { onClick() },
-        shape = RoundedCornerShape(14.dp),
-        color = MaterialTheme.colorScheme.surface,
-        shadowElevation = 1.dp
+            .clip(RoundedCornerShape(12.dp)),
+        color = Color(0xFF13223C)
     ) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(14.dp),
+            modifier = Modifier.padding(10.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = classroom.name,
-                    style = MaterialTheme.typography.titleSmall,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-                Text(
-                    text = "${classroom.level} • $studentCount تلميذ",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    fontSize = 11.sp
-                )
-                Spacer(modifier = Modifier.height(6.dp))
-                LinearProgressIndicator(
-                    progress = { (averageScore / 20.0).toFloat().coerceIn(0f, 1f) },
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                Box(
                     modifier = Modifier
-                        .fillMaxWidth(0.9f)
-                        .height(6.dp)
-                        .clip(RoundedCornerShape(3.dp)),
-                    color = if (averageScore >= 14.0) EmeraldSuccess else if (averageScore >= 10.0) GoldAccent else CrimsonAbsence,
-                    trackColor = MaterialTheme.colorScheme.surfaceVariant
-                )
+                        .size(42.dp)
+                        .clip(RoundedCornerShape(10.dp))
+                        .background(Color(0xFF1E3354)),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = date,
+                        style = MaterialTheme.typography.labelSmall,
+                        fontWeight = FontWeight.Bold,
+                        color = GoldAccent,
+                        fontSize = 10.sp,
+                        textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                    )
+                }
+                Column {
+                    Text(
+                        text = title,
+                        style = MaterialTheme.typography.labelLarge,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White,
+                        fontSize = 13.sp
+                    )
+                    Text(
+                        text = sub,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = Color(0xFF94A3B8),
+                        fontSize = 11.sp
+                    )
+                }
             }
 
             Surface(
-                color = if (averageScore >= 14.0) EmeraldContainer else if (averageScore >= 10.0) GoldContainer else CrimsonContainer,
-                shape = RoundedCornerShape(10.dp)
+                color = Color(0xFF2C2211),
+                shape = RoundedCornerShape(8.dp)
             ) {
                 Text(
-                    text = "$averageScore / 20",
-                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
-                    style = MaterialTheme.typography.labelMedium,
+                    text = badge,
+                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp),
+                    style = MaterialTheme.typography.labelSmall,
+                    color = GoldLight,
                     fontWeight = FontWeight.Bold,
-                    color = if (averageScore >= 14.0) EmeraldSuccess else if (averageScore >= 10.0) Color(0xFF7A4A00) else CrimsonAbsence
+                    fontSize = 10.sp
                 )
             }
         }
@@ -590,101 +809,84 @@ private fun ClassroomAverageRow(
 }
 
 @Composable
-private fun ExamEventCard(exam: ExamEvent) {
-    Surface(
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(14.dp),
-        color = MaterialTheme.colorScheme.surface,
-        shadowElevation = 1.dp
+private fun WeeklyDayBar(
+    day: String,
+    pct: Int,
+    color: Color
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(4.dp)
+    ) {
+        Text(
+            text = "$pct%",
+            style = MaterialTheme.typography.labelSmall,
+            fontWeight = FontWeight.Bold,
+            color = color,
+            fontSize = 10.sp
+        )
+        Box(
+            modifier = Modifier
+                .width(28.dp)
+                .height((pct * 0.7).dp)
+                .clip(RoundedCornerShape(6.dp))
+                .background(color)
+        )
+        Text(
+            text = day,
+            style = MaterialTheme.typography.bodySmall,
+            color = Color(0xFF94A3B8),
+            fontSize = 10.sp
+        )
+    }
+}
+
+@Composable
+private fun ActivityRowItem(
+    icon: ImageVector,
+    iconColor: Color,
+    containerColor: Color,
+    title: String,
+    time: String
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(14.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
+            horizontalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             Box(
                 modifier = Modifier
-                    .size(44.dp)
-                    .clip(RoundedCornerShape(10.dp))
-                    .background(NavyContainer),
+                    .size(32.dp)
+                    .clip(CircleShape)
+                    .background(containerColor),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
-                    imageVector = Icons.AutoMirrored.Filled.EventNote,
+                    imageVector = icon,
                     contentDescription = null,
-                    tint = NavyPrimary,
-                    modifier = Modifier.size(24.dp)
+                    tint = iconColor,
+                    modifier = Modifier.size(16.dp)
                 )
             }
-
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = exam.title,
-                    style = MaterialTheme.typography.titleSmall,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-                Text(
-                    text = "${exam.classroomName} • ${exam.room}",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-
-            Column(horizontalAlignment = Alignment.End) {
-                Text(
-                    text = exam.date,
-                    style = MaterialTheme.typography.labelSmall,
-                    fontWeight = FontWeight.Bold,
-                    color = NavyPrimary
-                )
-                Text(
-                    text = exam.time,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.outline,
-                    fontSize = 11.sp
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private fun ModuleShortcutCard(
-    title: String,
-    icon: ImageVector,
-    color: Color,
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit
-) {
-    Surface(
-        modifier = modifier.clickable { onClick() },
-        shape = RoundedCornerShape(14.dp),
-        color = MaterialTheme.colorScheme.surface,
-        shadowElevation = 1.dp
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(12.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            Icon(
-                imageVector = icon,
-                contentDescription = title,
-                tint = color,
-                modifier = Modifier.size(24.dp)
-            )
-            Spacer(modifier = Modifier.height(6.dp))
             Text(
                 text = title,
-                style = MaterialTheme.typography.labelMedium,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onSurface
+                style = MaterialTheme.typography.bodySmall,
+                fontWeight = FontWeight.Medium,
+                color = Color(0xFFE2E8F0),
+                fontSize = 12.sp
             )
         }
+        Text(
+            text = time,
+            style = MaterialTheme.typography.bodySmall,
+            color = Color(0xFF94A3B8),
+            fontSize = 11.sp
+        )
     }
 }
